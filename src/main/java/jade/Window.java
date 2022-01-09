@@ -1,5 +1,6 @@
 package jade;
 
+import util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -13,8 +14,10 @@ public class Window {
     private String title;
     private static Window window=null;
     private long glfwWindow;
-    private float r,b,g,a;
+    public float r,b,g,a;
     private  boolean fadeBlack;
+    private static Scene currentScene;
+
     private Window(){
         this.height=1080;
         this.width=1920;
@@ -23,6 +26,21 @@ public class Window {
         b=1;
         g=1;
         r=1;
+    }
+
+    public static void changeScene(int newScene){
+        switch (newScene){
+            case 0:
+                currentScene=new LevelEditorScene();
+                //currentScene.init();
+                break;
+            case 1:
+                currentScene=new LevelScene();
+                break;
+            default:
+                assert false: "Unknown scene '"+newScene+ "' ";
+                break;
+        }
     }
 
     public static Window get() {
@@ -83,27 +101,32 @@ public class Window {
         GLFW.glfwShowWindow(glfwWindow);
 
         GL.createCapabilities();
+
+        Window.changeScene(0);
     }
 
 
     public void loop(){
+        float beginTime= Time.getTime();
+        float endTime=Time.getTime();
+        float dt=-1.0f;
+
         while(!GLFW.glfwWindowShouldClose(glfwWindow)){
             //pool events
             GLFW.glfwPollEvents();
 
             GL11.glClearColor(r,g,b,a);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            if(fadeBlack){
-                r=Math.max(r-0.01f,0);
-                g=Math.max(g-0.01f,0);
-                b=Math.max(b-0.01f,0);
+
+            if(dt >=0){
+                currentScene.update(dt);
             }
 
-            if(KeyListener.isKeyPressed(GLFW.GLFW_KEY_SPACE)){
-                fadeBlack=true;
-            }
 
             GLFW.glfwSwapBuffers(glfwWindow);
+            endTime=Time.getTime();
+            dt=endTime-beginTime;
+            beginTime=endTime;
         }
     }
 }

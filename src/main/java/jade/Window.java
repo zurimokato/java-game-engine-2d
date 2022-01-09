@@ -13,10 +13,16 @@ public class Window {
     private String title;
     private static Window window=null;
     private long glfwWindow;
+    private float r,b,g,a;
+    private  boolean fadeBlack;
     private Window(){
         this.height=1080;
         this.width=1920;
         title="Mario";
+        a=1;
+        b=1;
+        g=1;
+        r=1;
     }
 
     public static Window get() {
@@ -67,6 +73,7 @@ public class Window {
         GLFW.glfwSetCursorPosCallback(glfwWindow,MouseListener::mousePosCallback);
         GLFW.glfwSetMouseButtonCallback(glfwWindow,MouseListener::mouseButtonCallback);
         GLFW.glfwSetScrollCallback(glfwWindow,MouseListener::mouseScrollCallback);
+        GLFW.glfwSetKeyCallback(glfwWindow,KeyListener::keyCallback);
 
         // make the OpenGL Context current
         GLFW.glfwMakeContextCurrent(glfwWindow);
@@ -84,8 +91,17 @@ public class Window {
             //pool events
             GLFW.glfwPollEvents();
 
-            GL11.glClearColor(1.0f,0.0f,0.0f,1.0f);
+            GL11.glClearColor(r,g,b,a);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            if(fadeBlack){
+                r=Math.max(r-0.01f,0);
+                g=Math.max(g-0.01f,0);
+                b=Math.max(b-0.01f,0);
+            }
+
+            if(KeyListener.isKeyPressed(GLFW.GLFW_KEY_SPACE)){
+                fadeBlack=true;
+            }
 
             GLFW.glfwSwapBuffers(glfwWindow);
         }

@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
+import java.util.logging.Logger;
+
 public class Window {
     private final int width, height;
     private final String title;
@@ -63,8 +65,11 @@ public class Window {
         //terminate GLFW and free error callbacks
 
         GLFW.glfwTerminate();
-        GLFW.glfwSetErrorCallback(null).free();
-
+        try {
+            GLFW.glfwSetErrorCallback(null).free();
+        }catch (NullPointerException ex){
+            System.err.println(ex.getMessage());
+        }
 
 
     }

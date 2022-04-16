@@ -10,12 +10,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 public class Window {
-    private  int width, height;
-    private String title;
+    private final int width, height;
+    private final String title;
     private static Window window=null;
     private long glfwWindow;
     public float r,b,g,a;
-    private  boolean fadeBlack;
     private static Scene currentScene;
 
     private Window(){
@@ -71,7 +70,7 @@ public class Window {
     }
 
     public void init(){
-        //setup the error callback
+        //set up the error callback
         GLFWErrorCallback.createPrint(System.err).set();
         if(!GLFW.glfwInit()){
             throw  new IllegalStateException("unable to initialize GLFW ");

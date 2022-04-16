@@ -2,7 +2,6 @@ package renderer;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
@@ -13,7 +12,7 @@ public class Shader {
 
     private int shaderProgramID;
     private String vertexSource, fragmentSource;
-    private String filePath;
+    private final String filePath;
 
     public Shader(String filePath){
         this.filePath=filePath;
